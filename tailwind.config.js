@@ -20,6 +20,8 @@ export default {
         'slate-grey': '#1d1e28',
         'charcoal-grey': '#252a34',
         grey: '#e3e4e7',
+        fa7b6f: '#fa7b6f',
+        FBDCD9: '#FBDCD9',
       },
     },
   },

@@ -37,7 +37,7 @@ const submit = () => {
   console.log('subscribed to news letter: ', state);
 
   //   state.contact.email = ''; // Reset email field
-  v$.value.$reset(); // Reset validation states
+  // v$.value.$reset(); // Reset validation states
 };
 const mobile = ref(false);
 const checkScreenSize = () => {
@@ -58,85 +58,120 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="h-screen flex md:items-center justify-center bg-charcoal-grey font-Roboto">
-    <div
-      class="md:min-h-20 md:h-96 h-full md:w-96 flex flex-col md:justify-center justify-between gap-5 p-8 bg-gray-200 md:rounded-2xl"
-      v-if="subscribed"
-    >
-      <div class="flex flex-col gap-3 h-2/3 justify-center">
-        <success class="" />
-        <h1 class="md:text-4xl text-6xl font-semibold md:font-medium">Thanks for subscribing!</h1>
-        <p class="text-lg md:text-base">
-          A confirmation email has been sent to <strong>{{ state.contact.email }}</strong
-          >. Please open it and click the button inside to confirm your subscription
-        </p>
-      </div>
-      <button
-        @click="subscribed = false"
-        class="bg-slate-grey w-full p-3 rounded-md text-white hover:bg-tomato-orange hover:transition-background"
+    <transition name="switch" mode="out-in">
+      <div
+        v-if="subscribed"
+        class="md:min-h-20 md:h-96 h-full md:w-96 flex flex-col md:justify-center justify-between gap-5 p-8 bg-gray-200 md:rounded-2xl"
       >
-        Dismiss message
-      </button>
-    </div>
-    <div
-      class="md:flex flex-col md:flex-row md:items-center bg-grey md:rounded-3xl md:p-4 shadow-sm md:justify-between md:max-w-4xl md:h-[65vh] min-h-96"
-      v-else
-    >
-      <img
-        src="@/assets/illustration-sign-up-mobile.svg"
-        alt="#"
-        v-if="mobile"
-        class="rounded-b-xl mb-10 w-full"
-      />
-      <img
-        src="@/assets/illustration-sign-up-desktop.svg"
-        alt="#"
+        <TransitionGroup
+          name="fade"
+          tag="div"
+          appear
+          class="flex flex-col gap-3 h-2/3 justify-center mb-3"
+        >
+          <success />
+          <h1 key="'header'" class="md:text-4xl text-6xl font-semibold md:font-medium">
+            Thanks for subscribing!
+          </h1>
+          <p key="'paragraph'" class="text-lg md:text-base">
+            A confirmation email has been sent to
+            <strong>{{ state.contact.email }}</strong
+            >. Please open it and click the button inside to confirm your subscription.
+          </p>
+        </TransitionGroup>
+        <button
+          key="'button'"
+          @click="subscribed = false"
+          class="bg-slate-grey w-full p-3 rounded-md text-white hover:bg-tomato-orange"
+        >
+          Dismiss message
+        </button>
+      </div>
+      <div
         v-else
-        class="order-2 h-[65vh] py-4"
-      />
-      <form @submit.prevent="submit" class="flex flex-col md:w-1/2 px-4 order-1">
-        <div class="flex flex-col gap-4 w-full md:py-8 px-4">
-          <div class="">
-            <h1 class="font-bold text-5xl mb-5">Stay Updated!</h1>
-            <p class="md:mb-4 mb-2 md:test-base text-para">
-              Join 60,000+ product managers receiving monthly updates on:
-            </p>
-          </div>
-          <ul class="flex flex-col gap-3 md:mb-5 mb-2 md:text-base text-para">
-            <li class="flex items-center gap-3">
-              <list />Product discovery and building what matters
-            </li>
-            <li class="flex items-center gap-3">
-              <list />Measuring to ensure updates are a success
-            </li>
-            <li class="flex items-center gap-3"><list />And much more!</li>
-          </ul>
-          <div class="flex flex-col w-full">
-            <div class="flex justify-between">
-              <label for="email" class="md:text-sm">Email address</label>
-              <span class="text-red-500 text-sm" v-if="v$.contact.email.$error">
-                {{ v$.contact.email.$errors[0]?.$message }}
-              </span>
+        class="md:flex flex-col md:flex-row md:items-center bg-grey md:rounded-3xl md:p-4 shadow-sm md:justify-between md:max-w-4xl md:h-[65vh] min-h-96"
+      >
+        <img
+          src="@/assets/illustration-sign-up-mobile.svg"
+          alt="#"
+          v-if="mobile"
+          class="rounded-b-xl mb-10 w-full"
+        />
+        <img
+          src="@/assets/illustration-sign-up-desktop.svg"
+          alt="#"
+          v-else
+          class="order-2 h-[65vh] py-4"
+        />
+        <form @submit.prevent="submit" class="flex flex-col md:w-1/2 px-4 order-1">
+          <div class="flex flex-col gap-4 w-full md:py-8 px-4">
+            <div>
+              <h1 class="font-bold text-5xl mb-5">Stay Updated!</h1>
+              <p class="md:mb-4 mb-2 md:test-base text-para">
+                Join 60,000+ product managers receiving monthly updates on:
+              </p>
             </div>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              v-model="state.contact.email"
-              class="md:py-3 mt-1 p-3 md:pl-6 w-full rounded-lg bg-transparent border-[1.5px] border-black outline-none"
-              :class="{
-                'bg-[#FBDCD9] bg-opacity-80 border-[#fa7b6f] text-[#fa7b6f]':
-                  v$.contact.email.$error,
-              }"
-            />
+            <ul class="flex flex-col gap-3 md:mb-5 mb-2 md:text-base text-para">
+              <li class="flex items-center gap-3">
+                <list />Product discovery and building what matters
+              </li>
+              <li class="flex items-center gap-3">
+                <list />Measuring to ensure updates are a success
+              </li>
+              <li class="flex items-center gap-3"><list />And much more!</li>
+            </ul>
+            <div class="flex flex-col w-full">
+              <div class="flex justify-between">
+                <label for="email" class="md:text-sm">Email address</label>
+                <span class="text-red-500 text-sm" v-if="v$.contact.email.$error">
+                  {{ v$.contact.email.$errors[0]?.$message }}
+                </span>
+              </div>
+              <input
+                type="text"
+                id="email"
+                name="email"
+                v-model="state.contact.email"
+                class="md:py-3 mt-1 p-3 md:pl-6 w-full rounded-lg bg-transparent border-[1.5px] border-black outline-none"
+                :class="{
+                  'bg-FBDCD9 bg-opacity-80 border-fa7b6f text-fa7b6f': v$.contact.email.$error,
+                }"
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full rounded-lg md:bg-tomato bg-slate-grey text-white text-center md:p-3 p-5 md:mt-3 hover:bg-tomato-orange hover:transition-background"
+            >
+              Subscribe to monthly newsletter
+            </button>
           </div>
-          <button
-            @click="submit"
-            class="w-full rounded-lg md:bg-tomato bg-slate-grey text-white text-center md:p-3 p-5 md:mt-3 hover:bg-tomato-orange hover:transition-background"
-          >
-            Subscribe to monthly newsletter
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </transition>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+.fade-enter-active,
+.fade-move,
+.fade-leave-active {
+  transition: all 0.4s ease;
+}
+
+.switch-enter-from,
+.switch-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.switch-enter-active,
+.switch-leave-active {
+  transition: all 0.3s ease;
+}
+</style>
